@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Timer by ChatGPT</title>
+    <style>
+        h1 {
+            font-size: 24px;
+            margin: 0 auto;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin: 0 auto;
+            color: #333;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+            text-align: right;
+            margin-right: 20px;
+            color: #333;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            color: #333;
+        }
+
+        #timer {
+            font-size: 18px;
+            margin: 0 auto;
+            color: #333;
+        }
+
+        button {
+            font-size: 14px;
+            width: 80px;
+            height: 30px;
+            color: #333;
+            background-color: #EEE;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <h1 style="margin: auto">Timer by ChatGPT</h1>
+    <label for="seconds">Enter seconds:</label>
+    <input id="seconds" type="number" value="10" min="0" max="3600" style="margin: auto">
+    <h2 id="timer" style="margin: auto">00:00:10</h2>
+    <button id="start-stop" style="margin: auto">Start</button>
+    <button id="reset" style="margin: auto">Reset</button>
+
+    <script>
+        // Get a reference to the input element, the h2 timer, and the buttons
+        const input = document.getElementById('seconds');
+        const timer = document.getElementById('timer');
+        const startStopButton = document.getElementById('start-stop');
+        const resetButton = document.getElementById('reset');
+
+        // Initialize the timer state
+        let seconds = input.value;
+        let intervalId = null;
+        let isRunning = false;
+
+        // Update the h2 timer to match the initial input value
+        timer.textContent = convertToTime(seconds);
+
+        // Add an event listener to the start/stop button
+        startStopButton.addEventListener('click', function () {
+            if (isRunning) {
+                // If the timer is running, stop it
+                clearInterval(intervalId);
+                isRunning = false;
+                startStopButton.textContent = 'Start';
+                startStopButton.style.backgroundColor = 'green';
+            } else {
+                // If the timer is not running, start it
+                intervalId = setInterval(function () {
+                    if (seconds > 0) {
+                        // Decrement the timer
+                        seconds--;
+                        timer.textContent = convertToTime(seconds);
+                    } else {
+                        // Play the alert sound and reset the timer
+                        new Audio('alert.mp3').play();
+                        seconds = input.value;
+                    }
+                }, 1000);
+                isRunning = true;
+                startStopButton.textContent = 'Stop';
+                startStopButton.style.backgroundColor = 'orange';
+            }
+        });
+
+        // Add an event listener to the reset button
+        resetButton.addEventListener('click', function () {
+            // Stop the timer and reset it to the initial input value
+            clearInterval(intervalId);
+            isRunning = false;
+            seconds = input.value;
+            timer.textContent = convertToTime(seconds);
+            startStopButton.textContent = 'Start';
+            startStopButton.style.backgroundColor = 'green';
+        });
+
+        // Add an event listener to the input element
+        input.addEventListener('change', function () {
+            // Update the h2 timer to match the current input value
+            timer.textContent = convertToTime(input.value);
+        });
+
+        // This function converts a number of seconds to a time string (HH:MM:SS)
+        function convertToTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secondsRemaining = seconds % 60;
+            return (
+                String(hours).padStart(2, '0') +
+                ':' +
+                String(minutes).padStart(2, '0') +
+                ':' +
+                String(secondsRemaining).padStart(2, '0')
+            );
+        }
+    </script>
+</body>
+
+</html>
